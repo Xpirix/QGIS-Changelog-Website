@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load thumbnail %}
 {% load custom_markup %}
 
@@ -22,7 +22,7 @@
             <div class="column is-narrow">
                 <div class="buttons mt-3 mb-0">
                     <a class="button is-success"
-                       href='{% url "category-create" project_slug %}'
+                       href='{% url "category-create"  %}'
                        title="Create New Category">
                         <span class="icon">
                             <i class="fas fa-plus"></i>
@@ -31,7 +31,7 @@
                     </a>
                     {% if user.is_staff or user in the_project.changelog_managers.all or user == the_project.owner %}
                         <a class="button is-light"
-                            href='{% url "category-order" project_slug %}'
+                            href='{% url "category-order"  %}'
                             title="Order Categories">
                             <span class="icon">
                                 <i class="fas fa-sort"></i>
@@ -52,13 +52,13 @@
     {% if num_categories == 0 %}
         <h3 class="subtitle is-5">No categories are defined, but you can 
             <a class="button is-small is-light"
-                href='{% url "category-create" project_slug %}'>
+                href='{% url "category-create"  %}'>
             create one</a>.
         </h3>
     {% endif %}
 
     {% if user.is_authenticated and user.is_staff %}
-        <ul id="sortable" data-url="{% url "category-submit-order" project_slug %}">
+        <ul id="sortable" data-url="{% url "category-submit-order"  %}">
     {% else %}
         <ul>
     {% endif %}
@@ -76,20 +76,20 @@
                 {% for category in categories %}
                 <tr>
                     <td>
-                        <a href='{% url "category-detail" project_slug=category.project.slug slug=category.slug %}'>
+                        <a href='{% url "category-detail" slug=category.slug %}'>
                             {{ category.name }}
                         </a>
                     </td>
                     <td>
                         <div class="buttons is-justify-content-flex-end is-flex-wrap-nowrap">
                             <a class="button is-small is-light"
-                                href='{% url "category-update" project_slug=category.project.slug slug=category.slug %}'>
+                                href='{% url "category-update" slug=category.slug %}'>
                                 <span class="icon is-small">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
                             </a>
                             <a class="button is-small is-danger is-light"
-                                href='{% url "category-delete" project_slug=category.project.slug slug=category.slug %}'>
+                                href='{% url "category-delete" slug=category.slug %}'>
                                 <span class="icon is-small">
                                     <i class="fas fa-trash"></i>
                                 </span>

@@ -143,7 +143,7 @@ class CategoryListView(LoginRequiredMixin, CategoryMixin, ListView):
         """
         context = super(CategoryListView, self).get_context_data(**kwargs)
         context['num_categories'] = context['categories'].count()
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         context['project_slug'] = project_slug
         if project_slug:
             context['the_project'] = Project.objects.get(slug=project_slug)
@@ -159,7 +159,7 @@ class CategoryListView(LoginRequiredMixin, CategoryMixin, ListView):
         :raises: Http404
         """
         if queryset is None:
-            project_slug = self.kwargs.get('project_slug', None)
+            project_slug = 'qgis'
             if project_slug:
                 try:
                     project = Project.objects.get(slug=project_slug)
@@ -196,7 +196,7 @@ class CategoryOrderView(LoginRequiredMixin, CategoryMixin, ListView):
         """
         context = super(CategoryOrderView, self).get_context_data(**kwargs)
         context['num_categories'] = context['categories'].count()
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         context['project_slug'] = project_slug
         if project_slug:
             context['the_project'] = Project.objects.get(slug=project_slug)
@@ -212,7 +212,7 @@ class CategoryOrderView(LoginRequiredMixin, CategoryMixin, ListView):
         :raises: Http404
         """
         if queryset is None:
-            project_slug = self.kwargs.get('project_slug', None)
+            project_slug = 'qgis'
             if project_slug:
                 try:
                     project = Project.objects.get(slug=project_slug)
@@ -257,7 +257,7 @@ class CategoryDetailView(CategoryMixin, DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         slug = self.kwargs.get('slug', None)
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         if slug and project_slug:
             try:
                 project = Project.objects.get(slug=project_slug)
@@ -296,7 +296,7 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         :returns: Unaltered request object
         :rtype: HttpResponse
         """
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         return super(CategoryDeleteView, self).get(request, *args, **kwargs)
 
@@ -315,7 +315,7 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         :returns: Unaltered request object
         :rtype: HttpResponse
         """
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         return super(CategoryDeleteView, self).post(request, *args, **kwargs)
 
@@ -328,9 +328,7 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         :returns: URL
         :rtype: HttpResponse
         """
-        return reverse('category-list', kwargs={
-            'project_slug': self.object.project.slug
-        })
+        return reverse('category-list', kwargs={})
 
     def get_queryset(self):
         """Get the queryset for this view.
@@ -369,7 +367,7 @@ class CategoryOrderSubmitView(LoginRequiredMixin, CategoryMixin, UpdateView):
         :rtype: HttpResponse
         :raises: Http404
         """
-        project_slug = kwargs.get('project_slug')
+        project_slug = 'qgis'
         project = Project.objects.get(slug=project_slug)
         categories = Category.objects.filter(project=project)
         categories_json = request.body
@@ -405,9 +403,7 @@ class CategoryCreateView(LoginRequiredMixin, CategoryMixin, CreateView):
        :returns: URL
        :rtype: HttpResponse
        """
-        return reverse('category-list', kwargs={
-            'project_slug': self.object.project.slug
-        })
+        return reverse('category-list', kwargs={})
 
     def get_context_data(self, **kwargs):
         """Get the context data which is passed to a template.
@@ -446,7 +442,7 @@ class CategoryCreateView(LoginRequiredMixin, CategoryMixin, CreateView):
         :rtype: dict
         """
         kwargs = super(CategoryCreateView, self).get_form_kwargs()
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         kwargs.update({
             'project': self.project
@@ -467,7 +463,7 @@ class CategoryUpdateView(LoginRequiredMixin, CategoryMixin, UpdateView):
         :rtype: dict
         """
         kwargs = super(CategoryUpdateView, self).get_form_kwargs()
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         kwargs.update({
             'project': self.project
@@ -495,7 +491,7 @@ class CategoryUpdateView(LoginRequiredMixin, CategoryMixin, UpdateView):
         user created (staff gets all projects)
         :rtype: QuerySet
         """
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         project = Project.objects.get(slug=project_slug)
         qs = Category.objects.all()
         if self.request.user.is_staff:
@@ -515,9 +511,7 @@ class CategoryUpdateView(LoginRequiredMixin, CategoryMixin, UpdateView):
         :returns: URL
         :rtype: HttpResponse
         """
-        return reverse('category-list', kwargs={
-            'project_slug': self.object.project.slug
-        })
+        return reverse('category-list', kwargs={})
 
     def form_valid(self, form):
         """Check that there is no referential integrity error when saving."""

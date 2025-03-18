@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base.html" %}
 {% load thumbnail %}
 {% load static %}
 {% load custom_markup %}
@@ -7,22 +7,23 @@
 {% block extra_head %}
 {% endblock %}
 
-{% block page_title %}
-    <h1>Versions</h1>
-{% endblock page_title %}
+
+{% block pagetitle %}
+{% include "layouts/page-title.html" %}
+{% endblock %}
 
 {% block content %}
     <div class="columns is-vcentered">
         <div class="column">
             <h1 class="title mb-0">
-                Versions
+                QGIS Versions
             </h1>
         </div>
         <div class="column is-narrow">
             <div class="buttons mb-0 mt-3">
                 {% if user.is_authenticated %}
                     {% if user.is_staff or user == the_project.owner or user in the_project.changelog_managers.all %}
-                        <a class="button is-success" href='{% url "version-create" project_slug %}' title="Create New Version">
+                        <a class="button is-success" href='{% url "version-create" %}' title="Create New Version">
                             <span class="icon">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -31,7 +32,7 @@
                     {% endif %}
                 {% endif %}
                 {% if versions %}
-                    <a class="button is-light" href='{% url "latest-version-atom-feed" project_slug %}' title="Atom Feed for Latest Version of {{ project.name }}">
+                    <a class="button is-light" href='{% url "latest-version-atom-feed" %}' title="Atom Feed for Latest Version of {{ project.name }}">
                         <span class="icon">
                             <i class="fas fa-rss"></i>
                         </span>
@@ -48,5 +49,6 @@
         {% for version in versions %}
             {% include 'version/includes/version-list-rich-item.html' %}
         {%  endfor %}
+        {% include "_pagination.html" %}
     {%  endif %}
 {% endblock %}

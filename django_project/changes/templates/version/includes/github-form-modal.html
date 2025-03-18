@@ -82,7 +82,7 @@
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: '{% url "fetch-category" project_pk=version.project.pk %}',
+            url: '{% url "fetch-category" %}',
             success: function (data) {
                 var $select = $('[name="category-github-import"]');
                 $select.append('<option value="">Select a Category</option>');
@@ -101,7 +101,7 @@
             $parentDiv.html('<i style="font-size: 12pt" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
             var repo = this.value;
             $.ajax({
-                url: '{% url "fetch-labels-github" project_pk=version.project.pk %}',
+                url: '{% url "fetch-labels-github" %}',
                 data: {
                     repo: repo
                 },
@@ -194,7 +194,7 @@
             $('#import-loading').show();
 
             $.ajax({
-                url: '{% url "fetch-pr-github" project_pk=version.project.pk %}',
+                url: '{% url "fetch-pr-github" %}',
                 type: 'POST',
                 data: {
                     'repo': repo,

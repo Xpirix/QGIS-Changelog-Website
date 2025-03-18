@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load thumbnail %}
 
 {% block title %}Categories - {{ block.super }}{% endblock %}
@@ -31,7 +31,7 @@
     <div class="column is-narrow">
         <div class="buttons mb-0 mt-3">
             <a class="button is-light"
-               href='{% url "category-list" project_slug %}'
+               href='{% url "category-list" %}'
                data-title="Category List">
                 <span class="icon">
                     <i class="fas fa-list"></i>
@@ -43,7 +43,7 @@
     {% if num_categories == 0 %}
         <h3 class="subtitle">No categories are defined, but you can</h3>
     {% endif %}
-    <ul id="sortable" data-url="{% url "category-submit-order" project_slug %}">
+    <ul id="sortable" data-url="{% url "category-submit-order" %}">
     {% for category in categories %}
         <li class="box" style="margin-top:6px;" id="{{ category.id }}-{{ category.name }}">
             <div class="media">

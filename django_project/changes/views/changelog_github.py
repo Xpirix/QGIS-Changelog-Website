@@ -75,7 +75,7 @@ class FetchGithubPRs(APIView):
     API to fetch PRs from Github repository.
     """
 
-    def post(self, request, project_pk):
+    def post(self, request):
         user = request.user
         repo = request.POST.get('repo', None)
         category_pk = request.POST.get('category', None)
@@ -89,7 +89,7 @@ class FetchGithubPRs(APIView):
             })
 
         try:
-            project = Project.objects.get(pk=project_pk)
+            project = Project.objects.get(slug='qgis')
         except Project.DoesNotExist:
             return Response({
                 'status': 'failed',
@@ -154,7 +154,7 @@ class FetchRepoLabels(LoginRequiredMixin, APIView):
     API to fetch list of labels on the repo.
     """
 
-    def get(self, request, project_pk):
+    def get(self, request):
         repo = request.GET.get('repo')
 
         if not repo:
@@ -203,9 +203,9 @@ class FetchCategory(LoginRequiredMixin, APIView):
     API to fetch Category.
     """
 
-    def get(self, request, project_pk):
+    def get(self, request):
         try:
-            project = Project.objects.get(pk=project_pk)
+            project = Project.objects.get(slug='qgis')
             categories = Category.objects.filter(project=project)
             serializer = CategorySerializer(categories, many=True)
             return Response(serializer.data)
@@ -235,7 +235,7 @@ class ImgExtExtension(Extension):
 def download_all_referenced_images(request, **kwargs):
     """Function to download all referenced images from other site."""
 
-    project_slug = kwargs.get('project_slug', None)
+    project_slug = 'qgis'
     version_slug = kwargs.get('slug', None)
 
     try:

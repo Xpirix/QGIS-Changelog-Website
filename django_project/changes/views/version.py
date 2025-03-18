@@ -86,7 +86,7 @@ class VersionListView(VersionMixin, PaginationMixin, ListView):
 
         context['num_versions'] = self.get_queryset().count()
         context['rst_download'] = False
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         context['project_slug'] = project_slug
         if project_slug:
             context['the_project'] = Project.objects.get(slug=project_slug)
@@ -127,7 +127,7 @@ class VersionListView(VersionMixin, PaginationMixin, ListView):
             if is_alphabet is not None:
                 version.save()
 
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         if project_slug:
             try:
                 project = Project.objects.get(slug=project_slug)
@@ -171,7 +171,7 @@ class VersionDetailView(VersionMixin, DetailView):
         context['sponsors'] = sponsors
         context['user_can_edit'] = False
         context['user_can_delete'] = False
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         context['project_slug'] = project_slug
         if project_slug:
             context['project'] = Project.objects.get(slug=project_slug)
@@ -210,7 +210,7 @@ class VersionDetailView(VersionMixin, DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         slug = self.kwargs.get('slug', None)
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         if slug and project_slug:
             try:
                 project = Project.objects.get(slug=project_slug)
@@ -285,7 +285,7 @@ class VersionThumbnailView(VersionMixin, DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         slug = self.kwargs.get('slug', None)
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         if slug and project_slug:
             try:
                 project = Project.objects.get(slug=project_slug)
@@ -333,7 +333,7 @@ class VersionDeleteView(LoginRequiredMixin, DeleteView):
         :rtype: HttpResponse
 
         """
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         return super(VersionDeleteView, self).get(request, *args, **kwargs)
 
@@ -355,7 +355,7 @@ class VersionDeleteView(LoginRequiredMixin, DeleteView):
         :returns: Unaltered request object
         :rtype: HttpResponse
         """
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         return super(VersionDeleteView, self).post(request, *args, **kwargs)
 
@@ -380,7 +380,7 @@ class VersionDeleteView(LoginRequiredMixin, DeleteView):
         :rtype: QuerySet
         :raises: Http404
         """
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         project = Project.objects.get(slug=project_slug)
         if not self.request.user.is_authenticated:
             raise Http404
@@ -423,9 +423,7 @@ class VersionCreateView(LoginRequiredMixin, VersionMixin, CreateView):
         :returns: URL
         :rtype: HttpResponse
         """
-        return reverse('version-list', kwargs={
-            'project_slug': self.object.project.slug
-        })
+        return reverse('version-list', kwargs={})
 
     def get_form_kwargs(self):
         """Get keyword arguments from form.
@@ -434,7 +432,7 @@ class VersionCreateView(LoginRequiredMixin, VersionMixin, CreateView):
         :rtype dict
         """
         kwargs = super(VersionCreateView, self).get_form_kwargs()
-        self.project_slug = self.kwargs.get('project_slug', None)
+        self.project_slug = 'qgis'
         self.project = Project.objects.get(slug=self.project_slug)
         kwargs.update({
             'user': self.request.user,
@@ -465,7 +463,7 @@ class VersionUpdateView(LoginRequiredMixin, VersionMixin, UpdateView):
         :rtype dict
         """
         kwargs = super(VersionUpdateView, self).get_form_kwargs()
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         kwargs['user'] = self.request.user
         kwargs['project'] = get_object_or_404(Project, slug=project_slug)
         return kwargs
@@ -477,7 +475,7 @@ class VersionUpdateView(LoginRequiredMixin, VersionMixin, UpdateView):
         current user can potentially edit.
         :rtype: QuerySet
         """
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         project = get_object_or_404(Project, slug=project_slug)
         # Versions are uniques only within the same project.
         versions_qs = Version.objects.filter(project=project, locked=False)
@@ -497,9 +495,7 @@ class VersionUpdateView(LoginRequiredMixin, VersionMixin, UpdateView):
         :returns: URL
         :rtype: HttpResponse
         """
-        return reverse('version-list', kwargs={
-            'project_slug': self.object.project.slug
-        })
+        return reverse('version-list', kwargs={})
 
     def form_valid(self, form):
         """Check that there is no referential integrity error when saving."""
@@ -634,7 +630,7 @@ class VersionDownload(CustomStaffuserRequiredMixin, VersionMixin, DetailView):
         """
 
         if self.queryset is None:
-            project_slug = self.kwargs.get('project_slug', None)
+            project_slug = 'qgis'
             slug = self.kwargs.get('slug', None)
             if project_slug and slug:
                 try:
@@ -811,7 +807,7 @@ class VersionDownloadMd(VersionMixin, DetailView):
         """
 
         if self.queryset is None:
-            project_slug = self.kwargs.get('project_slug', None)
+            project_slug = 'qgis'
             slug = self.kwargs.get('slug', None)
             if project_slug and slug:
                 try:
@@ -847,7 +843,7 @@ class VersionDownloadGnu(VersionMixin, DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         slug = self.kwargs.get('slug', None)
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         if slug and project_slug:
             try:
                 project = Project.objects.get(slug=project_slug)

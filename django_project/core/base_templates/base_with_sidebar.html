@@ -67,56 +67,14 @@
         <div class="container content">
             <div class="columns is-multiline is-centered">
                 <div class="column is-3">
-                    {% block leftbar %}
-                        {% block menu %}&nbsp;{% endblock %}
+                    {% block menu %}
+                    {{ block.super }}
+                        {% include "layouts/changes_sidebar.html" %}
                     {% endblock %}
                 </div>
                 <div class="content column is-9">
-                    {% if user.is_authenticated %}
-                        <div class="modal fade" id="issue-modal"><!-- Modal -->
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"
-                                                aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">Report an issue</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="issue-form" class="form-horizontal" style="padding: 20px 20px;">
-                                            <div class="form-group">
-                                                <label for="issue-title">Title</label>
-                                                <input class="form-control"
-                                                       type="text"
-                                                       id="issue-title">
-                                                <label for="issue-description">Description</label>
-                
-                                          <textarea class="form-control"
-                                                    id="issue-description"
-                                                    rows="3"
-                                                    cols="10"></textarea>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default"
-                                                data-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button id="issue-submit-button" class="btn btn-primary"
-                                                onclick="window.submitIssue()">
-                                            Submit an issue
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-                    {% endif %} {#  user authenticated #}
-
                     {% block content %}
                     {% endblock %}
-
                 </div>
             </div>
         </div>

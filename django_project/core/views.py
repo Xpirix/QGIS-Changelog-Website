@@ -88,7 +88,7 @@ def index_view(request):
                      settings.LANGUAGE_CODE or 'en')
     translation.activate(user_language)
     # look up the view name in base.urls
-    return redirect(reverse('home'))
+    return redirect(reverse('version-list'))
 
 class UserAutocomplete(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):

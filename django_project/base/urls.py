@@ -46,9 +46,9 @@ from .api_views.stripe_intent import StripeIntent
 
 urlpatterns = [
     # basic app views
-    url(r'^$',
-        view=ProjectListView.as_view(),
-        name='home'),
+    # url(r'^$',
+    #     view=ProjectListView.as_view(),
+    #     name='home'),
 
     url(r'^profile/$',
         view=UserDetailView.as_view(),

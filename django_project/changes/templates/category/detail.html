@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load custom_markup %}
 
 {% block title %}Entries - {{ block.super }}{% endblock %}
@@ -19,14 +19,14 @@
         <div class="column is-2">
             <div class="buttons">
                 <a class="button is-light"
-                   href='{% url "category-delete" project_slug=category.project.slug slug=category.slug %}'
+                   href='{% url "category-delete" slug=category.slug %}'
                    title="Delete {{ category.title }}">
                     <span class="icon">
                         <i class="fas fa-minus"></i>
                     </span>
                 </a>
                 <a class="button is-light"
-                   href='{% url "category-update" project_slug=category.project.slug slug=category.slug %}'
+                   href='{% url "category-update" slug=category.slug %}'
                    title="Edit {{ category.title }}">
                     <span class="icon">
                         <i class="fas fa-pencil-alt"></i>

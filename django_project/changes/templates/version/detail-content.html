@@ -49,7 +49,7 @@
         {% if user.is_staff or user in project.changelog_manager.all and not rst_download %}
             <a class="button is-light has-tooltip-bottom"
             data-tooltip="Order Entries"
-            href='{% url "entry-order" project_pk=version.project.pk version_pk=version.pk category_pk=row.category.pk %}'>
+            href='{% url "entry-order" version_pk=version.pk category_pk=row.category.pk %}'>
                 <span class="icon is-light">
                     <i class="fas fa-sort"></i>
                 </span>
