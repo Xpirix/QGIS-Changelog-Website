@@ -14,10 +14,12 @@ from crispy_forms.layout import (
 )
 from .models import (
     Project, ProjectScreenshot, Domain, Organisation, ProjectFlatpage)
-from certification.forms import MultiSelectWidget
 
 logger = logging.getLogger(__name__)
 
+
+class MultiSelectWidget(forms.SelectMultiple):
+    template_name = 'widgets/multiselect.html'
 
 class ProjectScreenshotForm(forms.ModelForm):
     """Form to input a screenshot linked to a project."""
@@ -40,6 +42,7 @@ class ProjectScreenshotForm(forms.ModelForm):
         self.helper.layout = layout
         self.helper.include_media = False
         self.helper.html5_required = False
+        self.helper.form_class = 'box-content'
         super(ProjectScreenshotForm, self).__init__(*args, **kwargs)
 
 
@@ -181,6 +184,7 @@ class ProjectForm(forms.ModelForm):
         self.helper.layout = layout
         self.helper.include_media = False
         self.helper.html5_required = False
+        self.helper.form_class = 'box-content'
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['changelog_managers'].label_from_instance = \
             lambda obj: "%s <%s>" % (obj.get_full_name(), obj)
@@ -274,6 +278,7 @@ class RegisterDomainForm(forms.ModelForm):
         )
         self.helper.layout = layout
         self.helper.html5_required = False
+        self.helper.form_class = 'box-content'
         super(RegisterDomainForm, self).__init__(*args, **kwargs)
         self.helper.add_input(Submit('submit', 'Submit', css_class='button is-success pt-2 mt-5'))
 
@@ -307,6 +312,7 @@ class OrganisationForm(forms.ModelForm):
         )
         self.helper.layout = layout
         self.helper.html5_required = False
+        self.helper.form_class = 'box-content'
         super(OrganisationForm, self).__init__(*args, **kwargs)
         self.helper.add_input(Submit('submit', 'Submit', css_class='button is-success pt-2 mt-5'))
 
@@ -345,6 +351,7 @@ class UserForm(forms.ModelForm):
         )
         self.helper.layout = layout
         self.helper.html5_required = False
+        self.helper.form_class = 'box-content'
         super(UserForm, self).__init__(*args, **kwargs)
         self.helper.add_input(Submit('submit', 'Submit', css_class='button is-success pt-2 mt-5'))
 

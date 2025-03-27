@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load custom_markup %}
 
 {% block title %}Category Deleted - {{ block.super }}{% endblock %}
@@ -11,34 +11,9 @@
 {% endblock page_title %}
 
 {% block content %}
-    <form action="" id="delete-confirmation" method="post">{% csrf_token %}
+    <form action="" id="delete-confirmation" method="post" class="box-content">{% csrf_token %}
         <div class="notification is-danger is-light">
-            <div class="columns">
-                <div class="column is-10">
-                    <p class="is-size-5">Please confirm you wish to delete the category below!</p>
-                </div>
-                <div class="column is-2">
-                    <div class="buttons">
-                        <a class="button is-danger"
-                           href="#"
-                           onClick="$('#delete-confirmation').submit()"
-                           title="Delete {{ category.name }}">
-                            <span class="icon">
-                                <i class="fas fa-minus"></i>
-                            </span>
-                            <span>Delete</span>
-                        </a>
-                        <a class="button is-light"
-                           href='{% url "category-list" category.project.slug %}'
-                           title="Cancel">
-                            <span class="icon">
-                                <i class="fas fa-arrow-left"></i>
-                            </span>
-                            <span>Cancel</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <p class="is-size-5">Please confirm you wish to delete the category below!</p>
         </div>
         <div class="columns">
             <div class="column is-12">
@@ -57,6 +32,26 @@
                     </figure>
                 {%  endif %}
             </div>
+        </div>
+
+        <div class="buttons">
+            <a class="button is-danger"
+               href="#"
+               onClick="$('#delete-confirmation').submit()"
+               title="Delete {{ category.name }}">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span>Delete</span>
+            </a>
+            <a class="button is-light"
+               href='{% url "category-list" %}'
+               title="Cancel">
+                <span class="icon">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+                <span>Cancel</span>
+            </a>
         </div>
     </form>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load custom_markup %}
 
 {% block title %}Entries - {{ block.super }}{% endblock %}
@@ -11,22 +11,22 @@
 {% endblock page_title %}
 
 {% block content %}
-
+<div class="box-content">
     <div class="columns">
         <div class="column is-10">
             <h3 class="title is-3">{{ category.name }}</h3>
         </div>
         <div class="column is-2">
             <div class="buttons">
-                <a class="button is-light"
-                   href='{% url "category-delete" project_slug=category.project.slug slug=category.slug %}'
+                <a class="button is-danger is-outlined"
+                   href='{% url "category-delete" slug=category.slug %}'
                    title="Delete {{ category.title }}">
                     <span class="icon">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-trash"></i>
                     </span>
                 </a>
                 <a class="button is-light"
-                   href='{% url "category-update" project_slug=category.project.slug slug=category.slug %}'
+                   href='{% url "category-update" slug=category.slug %}'
                    title="Edit {{ category.title }}">
                     <span class="icon">
                         <i class="fas fa-pencil-alt"></i>
@@ -54,5 +54,6 @@
             {%  endif %}
         </div>
     </div>
+</div>
 
 {% endblock %}

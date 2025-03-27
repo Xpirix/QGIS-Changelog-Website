@@ -4,6 +4,7 @@ from django.contrib.staticfiles import finders
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_str as force_unicode
 from django.utils.safestring import mark_safe
+from core.settings.utils import absolute_path
 
 register = template.Library()
 
@@ -92,3 +93,15 @@ def columns(thelist, n):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.simple_tag(takes_context=True)
+def version_tag(context):
+    """Reads current project release from the .version file."""
+    version_file = absolute_path('.version')
+    try:
+        with open(version_file, 'r') as file:
+            version = file.read()
+            context['version'] = version
+    except IOError:
+        context['version'] = 'Unknown'
+    return context['version']

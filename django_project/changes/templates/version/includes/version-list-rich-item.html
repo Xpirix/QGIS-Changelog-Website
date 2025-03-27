@@ -2,9 +2,7 @@
 <div class="container rich has-right rounded mt-5" {% if version.url %}ondblclick="window.open('{{ version.url }}', '_blank');"{% endif %}>
     <div class="cont coloring-1">
         <h3 name="titlePreview">
-            <a href="{% url 'version-detail' project_slug=version.project.slug slug=version.slug %}">
-                {{ the_project.slug|upper }} {{ version.name|upper }}
-            </a>
+            {{ the_project.slug|upper }} {{ version.name|upper }}
         </h3>
         <div name="contentPreview" class="has-text-justified">
             {% if version.release_date %}
@@ -15,21 +13,21 @@
                     <span>{{ version.release_date }}</span>
                 </p>
             {% endif %}
-            <p>{{ version.description|base_markdown|truncatewords:30 }}</p>
+            <p>{{ version.description|base_markdown|truncatewords:50 }}</p>
         </div>
         <div class="mt-3">
-            <a class="button is-primary1 is-outlined mb-3" href="{% url 'version-detail' project_slug=version.project.slug slug=version.slug %}">
-                <span class="icon"><i class="fas fa-eye"></i></span>
-                <span>View</span>
+            <a class="button is-primary1 mb-3" href="{% url 'version-detail' slug=version.slug %}">
+                <span class="icon"><i class="fas fa-info-circle"></i></span>
+                <span>More Details</span>
             </a>
             {% if user_can_edit %}
-                <a class="button is-primary1 is-outlined mb-3" href="{% url 'version-update' project_slug=version.project.slug slug=version.slug %}">
+                <a class="button is-primary1 is-outlined mb-3" href="{% url 'version-update' slug=version.slug %}">
                     <span class="icon"><i class="fas fa-pencil-alt"></i></span>
                     <span>Edit</span>
                 </a>
             {% endif %}
             {% if user_can_delete %}
-                <a class="button is-danger is-outlined mb-3 has-tooltip-bottom has-tooltip-arrow" data-tooltip="Delete" href="{% url 'version-delete' project_slug=version.project.slug slug=version.slug %}">
+                <a class="button is-danger is-outlined mb-3 has-tooltip-bottom has-tooltip-arrow" data-tooltip="Delete" href="{% url 'version-delete' slug=version.slug %}">
                     <span class="icon"><i class="fas fa-trash"></i></span>
                 </a>
             {% endif %}

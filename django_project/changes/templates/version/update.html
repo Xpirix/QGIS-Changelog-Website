@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 
 {% load crispy_forms_tags %}
 
@@ -15,10 +15,21 @@
 
 {% block content %}
 
-    <section id="forms">
-        <div class='container'>
-            {% crispy form %}
-        </div>
-    </section>
+<section id="forms">
+    <div class='container'>
+        {% crispy form %}
+    </div>
+</section>
 
+<script>
+    $(function() {
+        var releaseDate = $('#id_release_date').val();
+        new AirDatepicker('#id_release_date', {
+            dateFormat: 'yyyy-MM-dd',
+            locale: localeEn['default'],
+            autoClose: true,
+            selectedDates: releaseDate ? [new Date(releaseDate)] : []
+        });
+    });
+</script>
 {% endblock %}

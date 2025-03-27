@@ -71,7 +71,7 @@ services:
       - static-data:/home/web/static:rw
       - media-data:/home/web/media:rw
       - reports-data:/home/web/reports
-    command: bash -c "npm run build && uwsgi --ini /uwsgi.conf"
+    command: bash -c "npm install && npm run build && uwsgi --ini /uwsgi.conf"
     links:
       - db:db
       # - smtp:smtp

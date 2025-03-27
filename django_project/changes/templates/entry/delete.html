@@ -1,4 +1,4 @@
-{% extends "project_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load custom_markup %}
 
 {% block title %}Entries Deleted - {{ block.super }}{% endblock %}
@@ -7,46 +7,40 @@
 {% endblock %}
 
 {% block page_title %}
-    <h1>Entry Deleted</h1>
+    <h1 class="title">Entry Deleted</h1>
 {% endblock page_title %}
 
 {% block content %}
-    <form action="" id="delete-confirmation" method="post">{% csrf_token %}
-        <div class="alert row">
-            <div class="col-lg-10">
-                <p class="lead">Please confirm you wish to delete the entry below!</p>
+    <div class="box-content">
+        <form action="" id="delete-confirmation" method="post">{% csrf_token %}
+            <div class="notification is-danger is-light">
+                <p>Please confirm you wish to delete the entry below!</p>
             </div>
-            <div class="col-lg-2">
-                <div class="btn-group">
-                    <a class="btn btn-default btn-sm tooltip-toggle"
-                       href="#"
-                       onClick="$('#delete-confirmation').submit()"
-                       data-title="Delete {{ entry.title }}">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </a>
-                    <a class="btn btn-default btn-sm tooltip-toggle"
-                       href='{% url "version-detail" project_slug=entry.version.project.slug slug=entry.version.slug %}'
-                       data-title="Cancel">
-                        <span class="glyphicon glyphicon-arrow-left"></span>
-                    </a>
+            <div class="content">
+                <h3><strong>Feature:</strong> {{ entry.title }}</h3>
+                <div class="columns">
+                    <div class="column is-two-thirds">
+                        {{ entry.description|base_markdown }}
+                    </div>
+                    <div class="column">
+                        {% if entry.image_file %}
+                            <figure class="image is-4by3">
+                                <img class="is-rounded" src="{{ entry.image_file.url }}" />
+                            </figure>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <h3><span class="text-muted">Feature:</span> {{ entry.title }}</h3>
+            <div class="buttons is-right">
+                <button class="button is-danger" type="submit">
+                    <span class="icon"><i class="fas fa-minus"></i></span>
+                    <span>Delete</span>
+                </button>
+                <a class="button is-light" href='{% url "version-detail" slug=entry.version.slug %}'>
+                    <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                    <span>Cancel</span>
+                </a>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-8">
-                {{ entry.description|base_markdown }}
-            </div>
-            <div class="col-lg-4">
-                {% if entry.image_file %}
-                    <img class="img-responsive img-rounded"
-                         src="{{ entry.image_file.url }}" />
-                {%  endif %}
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 {% endblock %}

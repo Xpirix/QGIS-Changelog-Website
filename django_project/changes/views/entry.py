@@ -17,7 +17,7 @@ from django.views.generic import (
 from braces.views import LoginRequiredMixin
 from ..models import Version, Entry, Category
 from ..forms import EntryForm
-from lesson.utilities import re_order_features
+from common.utilities import re_order_features
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,6 @@ class EntryDeleteView(LoginRequiredMixin, DeleteView):
         :rtype: HttpResponse
         """
         return reverse('version-detail', kwargs={
-            'project_slug': self.object.version.project.slug,
             'slug': self.object.version.slug
         })
 
@@ -101,7 +100,6 @@ class EntryCreateView(LoginRequiredMixin, EntryMixin, CreateView):
         :rtype: HttpResponse
         """
         return reverse('version-detail', kwargs={
-            'project_slug': self.object.version.project.slug,
             'slug': self.object.version.slug
         })
 
@@ -113,7 +111,7 @@ class EntryCreateView(LoginRequiredMixin, EntryMixin, CreateView):
         """
         kwargs = super(EntryCreateView, self).get_form_kwargs()
         version_slug = self.kwargs.get('version_slug', None)
-        project_slug = self.kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         project = get_object_or_404(Project, slug=project_slug)
         version = get_object_or_404(
             Version, slug=version_slug, project=project)
@@ -162,7 +160,6 @@ class EntryUpdateView(LoginRequiredMixin, EntryMixin, UpdateView):
         :rtype: HttpResponse
         """
         return reverse('version-detail', kwargs={
-            'project_slug': self.object.version.project.slug,
             'slug': self.object.version.slug}
         )
 

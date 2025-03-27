@@ -1,4 +1,4 @@
-{% extends "layouts/changes_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load custom_markup %}
 {% load static %}
 {#    we disable disqus temporarily because of unwanted ads. #}
@@ -18,125 +18,127 @@
 {% endblock page_title %}
 
 {% block content %}
-<div class="columns" style="margin-top:15px;margin-bottom:15px;">
-    <div class="column is-full">
-        <div class="buttons is-pulled-left">
-            {% if user_can_edit %}
-                <a class="button is-light tooltip"
-                   data-tooltip="Download sustaining member list as html"
-                   href='{% url 'version-sponsor-download' project_slug=version.project.slug slug=version.slug %}'>
-                    <span class="icon is-small">
-                        <i class="fas fa-download"></i>
-                    </span>
-                    <span>HTML</span>
-                </a>
-                <a class="button is-light tooltip"
-                   data-tooltip="Download as RST"
-                   href='{% url 'version-download' project_slug=version.project.slug slug=version.slug %}'>
-                    <span class="icon is-small">
-                        <i class="fas fa-download"></i>
-                    </span>
-                    <span>RST</span>
-                </a>
-            {% endif %}
+<div class="buttons">
+    {% if user_can_edit and not version.locked %}
+        <a href="{% url 'entry-create' version_slug=version.slug %}"
+           class="button is-success tooltip"
+           data-tooltip="Add New Entry">
+            <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span>New Entry</span>
+        </a>
+        <a class="button is-light tooltip"
+           data-tooltip="Update Version"
+           href='{% url "version-update" slug=version.slug %}'>
+            <span class="icon is-small">
+                <i class="fas fa-edit"></i>
+            </span>
+        </a>
+    {% endif %}
+    {% if version.locked %}
+        {% if user.is_staff or user == version.project.owner or user in version.project.changelog_managers.all %}
             <a class="button is-light tooltip"
-               data-tooltip="Download as Markdown"
-               href='{% url 'version-download-md' project_slug=version.project.slug slug=version.slug %}'>
+               data-tooltip="Unlock this version."
+               onclick="$('#unlockModal').addClass('is-active')">
                 <span class="icon is-small">
-                    <i class="fas fa-download"></i>
-                </span>
-                <span>MD</span>
-            </a>
-            <a class="button is-light tooltip"
-               data-tooltip="Download as GNU Changelog"
-               href='{% url 'version-download-gnu' project_slug=version.project.slug slug=version.slug %}'>
-                <span class="icon is-small">
-                    <i class="fas fa-list-alt"></i>
+                    <i class="fas fa-unlock"></i>
                 </span>
             </a>
-            {% if user_can_delete and not version.locked %}
-                <a class="button is-light tooltip"
-                   data-tooltip="Delete Version"
-                   href='{% url "version-delete" project_slug=version.project.slug slug=version.slug %}'>
-                    <span class="icon is-small">
-                        <i class="fas fa-trash"></i>
-                    </span>
-                </a>
-            {% endif %}
-            {% if user_can_edit and not version.locked %}
-                <a class="button is-light tooltip"
-                   data-tooltip="Update Version"
-                   href='{% url "version-update" project_slug=version.project.slug slug=version.slug %}'>
-                    <span class="icon is-small">
-                        <i class="fas fa-edit"></i>
-                    </span>
-                </a>
-            {% endif %}
-            {% if version.locked %}
-                {% if user.is_staff or user == version.project.owner or user in version.project.changelog_managers.all %}
-                    <a class="button is-light tooltip"
-                       data-tooltip="Unlock this version."
-                       onclick="$('#unlockModal').addClass('is-active')">
-                        <span class="icon is-small">
-                            <i class="fas fa-unlock"></i>
-                        </span>
-                    </a>
-                {% else %}
-                    <a class="button is-light tooltip"
-                       data-tooltip="This version is locked." disabled="disabled">
-                        <span class="icon is-small">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                    </a>
-                {% endif %}
-            {% else %}
-                {% if user.is_staff or user == version.project.owner or user in version.project.changelog_managers.all %}
-                    <a class="button is-light tooltip"
-                       data-tooltip="Lock this version."
-                       onclick="$('#lockModal').addClass('is-active')">
-                        <span class="icon is-small">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                    </a>
-                {% endif %}
-            {% endif %}
-        </div>
-        <div class="is-pulled-right">
-            {% if user.is_authenticated %}
-                <span class="loading-img" style="margin-right: 5px; font-size: 9pt; display: none">
-                    Downloading all referenced images is in progress, please do not close this window.
-                    <i style="font-size: 15pt; margin-left: 5px" class="fas fa-spinner fa-spin"></i></span>
-                <button onclick="downloadAllReferencedImages()"
-                   class="button is-light tooltip"
-                   data-tooltip="Download All Referenced Images for This Version">
-                    <span class="icon is-small">
-                        <i class="fas fa-download"></i>
-                    </span>
-                </button>
-                <button class="button is-light tooltip"
-                        data-tooltip="Import PR from Github into Entries"
-                        data-toggle="modal" data-target="#GithubPRModal">
-                    <span class="icon is-small">
-                        <i class="fab fa-github"></i>
-                    </span>
-                </button>
-                <a href="{% url 'entry-create' project_slug=version.project.slug version_slug=version.slug %}"
-                   class="button is-light tooltip"
-                   data-tooltip="Add New Entry">
-                    <span class="icon is-small">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                </a>
-            {% endif %}
+        {% else %}
             <a class="button is-light tooltip"
-               href='{% url "entry-atom-feed" project_slug=version.project.slug version_slug=version.slug %}'
-               data-tooltip="Atom Feed for {{ version.project.name }} Version {{ version.name }}">
+               data-tooltip="This version is locked." disabled="disabled">
                 <span class="icon is-small">
-                    <i class="fas fa-rss"></i>
+                    <i class="fas fa-lock"></i>
                 </span>
             </a>
-        </div>
-    </div>
+        {% endif %}
+    {% else %}
+        {% if user.is_staff or user == version.project.owner or user in version.project.changelog_managers.all %}
+            <a class="button is-light tooltip"
+               data-tooltip="Lock this version."
+               onclick="$('#lockModal').addClass('is-active')">
+                <span class="icon is-small">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </a>
+        {% endif %}
+    {% endif %}
+    {% if user.is_authenticated %}
+        <button class="button is-light tooltip"
+            data-tooltip="Import PR from Github into Entries"
+            onclick="$('#GithubPRModal').addClass('is-active')">
+        <span class="icon is-small">
+            <i class="fab fa-github"></i>
+        </span>
+        </button>
+    {% endif %}
+    {% if user_can_delete and not version.locked %}
+        <a class="button is-light is-danger tooltip"
+           data-tooltip="Delete Version"
+           href='{% url "version-delete" slug=version.slug %}'>
+            <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+            </span>
+        </a>
+    {% endif %}
+</div>
+<div class="buttons">
+    {% if user.is_authenticated %}
+        <span class="loading-img" style="margin-right: 5px; font-size: 9pt; display: none">
+            Downloading all referenced images is in progress, please do not close this window.
+            <i style="font-size: 15pt; margin-left: 5px" class="fas fa-spinner fa-spin"></i></span>
+        <button onclick="downloadAllReferencedImages()"
+           class="button is-light is-success tooltip"
+           data-tooltip="Download All Referenced Images for This Version">
+            <span class="icon is-small">
+                <i class="fas fa-download"></i>
+            </span>
+            <span>Images</span>
+        </button>
+    {% endif %}
+    {% if user_can_edit %}
+        <a class="button is-light is-success tooltip"
+           data-tooltip="Download sustaining member list as html"
+           href='{% url 'version-sponsor-download' slug=version.slug %}'>
+            <span class="icon is-small">
+                <i class="fas fa-download"></i>
+            </span>
+            <span>HTML</span>
+        </a>
+        <a class="button is-light is-success tooltip"
+           data-tooltip="Download as RST"
+           href='{% url 'version-download' slug=version.slug %}'>
+            <span class="icon is-small">
+                <i class="fas fa-download"></i>
+            </span>
+            <span>RST</span>
+        </a>
+    {% endif %}
+    <a class="button is-light is-success tooltip"
+       data-tooltip="Download as Markdown"
+       href='{% url 'version-download-md' slug=version.slug %}'>
+        <span class="icon is-small">
+            <i class="fas fa-download"></i>
+        </span>
+        <span>MD</span>
+    </a>
+    <a class="button is-light is-success tooltip"
+       data-tooltip="Download as GNU Changelog"
+       href='{% url 'version-download-gnu' slug=version.slug %}'>
+        <span class="icon is-small">
+            <i class="fas fa-download"></i>
+        </span>
+        <span>GNU</span>
+    </a>
+    <a class="button is-light is-success tooltip"
+       href='{% url "entry-atom-feed" version_slug=version.slug %}'
+       data-tooltip="Atom Feed for {{ version.project.name }} Version {{ version.name }}">
+        <span class="icon is-small">
+            <i class="fas fa-rss"></i>
+        </span>
+    </a>
+
 </div>
 
 <div class="modal" id="unlockModal">
@@ -151,7 +153,7 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button" onclick="$('#unlockModal').removeClass('is-active')">Close</button>
-      <button class="button is-primary" onclick="unlockVersion()">Yes</button>
+      <button class="button is-success is-outlined" onclick="unlockVersion()">Yes</button>
     </footer>
   </div>
 </div>
@@ -168,7 +170,7 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button" onclick="$('#lockModal').removeClass('is-active')">Close</button>
-      <button class="button is-primary" onclick="lockVersion()">Yes</button>
+      <button class="button is-warning is-outlined" onclick="lockVersion()">Yes</button>
     </footer>
   </div>
 </div>
@@ -178,7 +180,7 @@
         function unlockVersion() {
             $.ajax({
                 type: 'GET',
-                url: '{% url "version-unlocked" project_slug=version.project.slug slug=version.slug %}',
+                url: '{% url "version-unlocked" slug=version.slug %}',
                 success: function () {
                     $('#unlockModal').removeClass('is-active');
                     location.reload()
@@ -188,7 +190,7 @@
         function lockVersion() {
             $.ajax({
                 type: 'GET',
-                url: '{% url "version-locked" project_slug=version.project.slug slug=version.slug %}',
+                url: '{% url "version-locked" slug=version.slug %}',
                 success: function () {
                     $('#lockModal').removeClass('is-active');
                     location.reload()
@@ -204,7 +206,7 @@
     <script>
         function downloadAllReferencedImages() {
             $.ajax({
-                url: "{% url 'download-referenced-images' project_slug=version.project.slug slug=version.slug %}",
+                url: "{% url 'download-referenced-images' slug=version.slug %}",
                 async: true,
                 beforeSend: function () {
                     $('.loading-img').show();

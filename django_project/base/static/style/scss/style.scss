@@ -4,6 +4,10 @@
 @import "toogle-switch.scss";
 @import "../../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass";
 
+html {
+  scroll-padding-top: 120px; /* height of your fixed header */
+}
+
 body {
   color: $text-primary1;
   font-weight: 300;
@@ -371,4 +375,8 @@ a.is-active > span {
     box-shadow: $shadow-hover;
     cursor: pointer;
   }
+}
+
+.rounded .rich-right img {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

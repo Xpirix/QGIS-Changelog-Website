@@ -21,60 +21,63 @@
     .error {
         border: 1px solid red !important;
     }
-    .error-message {
-        padding: 7px 0;
-        background: rgba(255, 173, 173, 0.7);
-    }
-    .error-notification {
-        display: inline-block;
-        color: red;
-        margin-right: 12px;
-    }
 </style>
 
 <!-- Modal -->
-<div class="modal fade" id="GithubPRModal" tabindex="-1" role="dialog" aria-labelledby="GithubPRModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title" id="exampleModalLabel">Import PR from Github into Entries</h4>
-            <div class="error-message" style="display: none"></div>
-        </div>
-        <div class="modal-body">
+<div class="modal" id="GithubPRModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Import PR from Github into Entries</p>
+            <button class="delete" aria-label="close" onclick="resetForm()"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="notification is-danger is-light error-message" style="display: none"></div>
             <form id="github-entry-import">
-                <label for="repo">Repository url</label>
-                <input class="form-control" name="repo" required>
-                <br>
-                <label>Labels</label><br>
-                <label style="font-size: 12px; font-weight: normal" class="text-muted">Please select the label of the PRs which you'd like to fetch, no label selected means all PRs will be fetched.</label>
-                <label style="font-size: 12px; font-weight: normal" class="text-muted">If you select more than one label, only PRs containing all label selected will be fetched.</label><br>
-                <div class="label-github">
+                <div class="field">
+                    <label class="label" for="repo">Repository url</label>
+                    <div class="control">
+                        <input class="input" name="repo" required>
+                    </div>
                 </div>
-                <br>
-                <label>State</label><br>
-                <label style="font-size: 12px; font-weight: normal" class="text-muted">Please select the state of the PRs which you'd like to fetch, no selection means all PRs will be fetched.</label><br>
-                <span class="label-checkbox-github">
-                    <input type="checkbox" class="github-state-option" id="open" name="open" value="open">&nbsp;
-                    <label for="open">Open</label>
-                </span>
-                <span class="label-checkbox-github">
-                    <input type="checkbox" class="github-state-option" id="closed" name="closed" value="closed">&nbsp;
-                    <label for="closed">Closed</label>
-                </span>
-                <br>
-                <br>
-                <label for="category-github-import">Category</label><br>
-                <label style="font-size: 12px; font-weight: normal" class="text-muted">Please select a category where the new entries will associate to.</label><br>
-                <select class="form-control" name="category-github-import" required>
-                </select>
+                <div class="field">
+                    <label class="label">Labels</label>
+                    <p class="help">Please select the label of the PRs which you'd like to fetch, no label selected means all PRs will be fetched.</p>
+                    <p class="help">If you select more than one label, only PRs containing all label selected will be fetched.</p>
+                    <div class="label-github">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">State</label>
+                    <p class="help">Please select the state of the PRs which you'd like to fetch, no selection means all PRs will be fetched.</p>
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" class="github-state-option" id="open" name="open" value="open">
+                            Open
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" class="github-state-option" id="closed" name="closed" value="closed">
+                            Closed
+                        </label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="category-github-import">Category</label>
+                    <p class="help">Please select a category where the new entries will associate to.</p>
+                    <div class="control">
+                        <div class="select">
+                            <select name="category-github-import" required>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </form>
-        </div>
-        <div class="modal-footer">
-            <div class="error-notification" style="display: none">Import error see message above</div>
-            <button type="button" onclick="resetForm()" class="btn btn-secondary">Cancel</button>
-            <button type="submit" onclick="submitForm(this)" class="btn btn-primary">Import <i id="import-loading" style="font-size: 12pt; display: none" class="fa fa-spinner fa-spin fa-3x fa-fw"></i></button>
-        </div>
-        </div>
+            <div class="notification is-danger error-notification" style="display: none">Import error see message above</div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-secondary" type="button" onclick="resetForm()">Cancel</button>
+            <button class="button is-success" type="submit" onclick="submitForm(this)">Import <i id="import-loading" style="font-size: 12pt; display: none" class="fa fa-spinner fa-spin fa-3x fa-fw"></i></button>
+        </footer>
     </div>
 </div>
 
@@ -82,7 +85,7 @@
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: '{% url "fetch-category" project_pk=version.project.pk %}',
+            url: '{% url "fetch-category" %}',
             success: function (data) {
                 var $select = $('[name="category-github-import"]');
                 $select.append('<option value="">Select a Category</option>');
@@ -101,7 +104,7 @@
             $parentDiv.html('<i style="font-size: 12pt" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
             var repo = this.value;
             $.ajax({
-                url: '{% url "fetch-labels-github" project_pk=version.project.pk %}',
+                url: '{% url "fetch-labels-github" %}',
                 data: {
                     repo: repo
                 },
@@ -194,7 +197,7 @@
             $('#import-loading').show();
 
             $.ajax({
-                url: '{% url "fetch-pr-github" project_pk=version.project.pk %}',
+                url: '{% url "fetch-pr-github" %}',
                 type: 'POST',
                 data: {
                     'repo': repo,

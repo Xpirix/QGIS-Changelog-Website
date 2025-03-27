@@ -4,7 +4,6 @@
 from .prod import *  # noqa
 import ast
 import os
-print(os.environ)
 
 DEBUG = False
 

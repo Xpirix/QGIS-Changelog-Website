@@ -1,4 +1,4 @@
-{% extends "project_base.html" %}
+{% extends "base_with_sidebar.html" %}
 {% load thumbnail %}
 
 {% block title %}Entries - {{ block.super }}{% endblock %}
@@ -11,36 +11,45 @@
 {% endblock page_title %}
 
 {% block content %}
-    <div class="page-header">
-        <h1 class="text-muted">
-            <span class="glyphicon glyphicon-sort-by-order"></span> Order Entries for {{ category.name }}
-            <span id="order-saved" hidden class="alert alert-success" style="font-size: 9pt; padding: 3px;font-style: italic;">
-                order saved</span>
-            <span id="order-not-saved" hidden class="alert alert-danger" style="font-size: 9pt; padding: 3px;font-style: italic;">
-                order not saved</span>
-            <div class="pull-right btn-group" style="margin-top: 5px;">
-                <a class="btn btn-default btn-mini tooltip-toggle"
-                   href='{% url "version-detail" project_slug=version.project.slug slug=version.slug %}'
+    <div class="box-content">
+        <h1 class="title is-4">
+            <span class="icon">
+                <i class="fas fa-sort"></i>
+            </span>
+            Order Entries for {{ category.name }}
+            <span id="order-saved" hidden class="tag is-success is-light" style="font-size: 9pt; padding: 3px; font-style: italic;">
+                order saved
+            </span>
+            <span id="order-not-saved" hidden class="tag is-danger is-light" style="font-size: 9pt; padding: 3px; font-style: italic;">
+                order not saved
+            </span>
+            <div class="buttons is-pulled-right" style="margin-top: 5px;">
+                <a class="button is-small is-light tooltip-toggle"
+                   href='{% url "version-detail" slug=version.slug %}'
                    data-title="Entry List">
-                    <span class="glyphicon glyphicon-th-list"></span>
+                    <span class="icon">
+                        <i class="fas fa-list"></i>
+                    </span>
                 </a>
             </div>
         </h1>
     </div>
     {% if entry.count == 0 %}
-        <h3>No entries are defined.</h3>
+        <h3 class="subtitle is-5">No entries are defined.</h3>
     {% endif %}
-    <ul id="sortable" data-url="{% url "entry-submit-order" project_pk=version.project.pk version_pk=version.pk category_pk=category.pk %}">
+    <ul id="sortable" data-url="{% url "entry-submit-order" version_pk=version.pk category_pk=category.pk %}">
     {% for entry in object_list %}
-        <li class="row order" style="margin-top:6px;" id="{{ entry.id }}-{{ entry.title }}" >
-            <div class="col-lg-12">
+        <li class="" style="margin-top:6px;" id="{{ entry.id }}-{{ entry.title }}">
+            <div class="content">
                 <p>
-                    <span class="glyphicon glyphicon-menu-hamburger" style="margin-right: 20px"></span>
+                    <span class="icon" style="margin-right: 20px;">
+                        <i class="fas fa-bars"></i>
+                    </span>
                     {{ entry.title }}
                 </p>
             </div>
         </li>
-    {%  endfor %}
+    {% endfor %}
     </ul>
     <hr />
 

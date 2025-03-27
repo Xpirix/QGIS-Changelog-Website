@@ -27,9 +27,11 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "dependencies": {
+    "air-datepicker": "^3.5.3",
     "datatables.net": "^2.2.2",
     "datatables.net-dt": "^2.2.2",
     "jquery": "^3.7.1",
+    "jquery-ui": "^1.14.1",
     "leaflet": "^1.9.4",
     "moment": "^2.30.1"
   }

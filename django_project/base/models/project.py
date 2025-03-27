@@ -339,7 +339,7 @@ class Project(models.Model):
         :rtype: str
 
         """
-        return reverse('project-detail', kwargs={'slug': self.slug})
+        return reverse('project-detail')
 
     def versions(self):
         """Get all the versions for this project."""

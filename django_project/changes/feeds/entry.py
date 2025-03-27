@@ -40,7 +40,7 @@ class RssEntryFeed(Feed):
         :raises: Http404
         """
         try:
-            project_slug = kwargs.get('project_slug', None)
+            project_slug = 'qgis'
             project = get_object_or_404(Project, slug=project_slug)
             version_slug = kwargs.get('version_slug', None)
             # Check if version is given, give atom for the that version,

@@ -36,7 +36,7 @@ class RssVersionFeed(Feed):
 
         :raises: Http404
         """
-        project_slug = kwargs.get('project_slug', None)
+        project_slug = 'qgis'
         return get_object_or_404(Project, slug=project_slug)
 
     def title(self, obj):

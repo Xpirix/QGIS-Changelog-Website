@@ -3,10 +3,11 @@ const BundleTracker = require('webpack-bundle-tracker');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
-const mode = process.argv.indexOf("production") !== -1 ? "production" : "development";
+const mode = process.argv.includes("production") ? "production" : "development";
 console.log(`Webpack mode: ${mode}`);
 
-let plugins = [
+// Common plugins
+const plugins = [
   new BundleTracker({ path: __dirname, filename: 'webpack-stats.json' }),
   new MiniCssExtractPlugin({
     filename: 'css/[name].[contenthash].css',
@@ -15,59 +16,51 @@ let plugins = [
     $: 'jquery',
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
-  }),
-  new webpack.ProvidePlugin({
-    Leaflet: 'leaflet',
+    'window.$': 'jquery',
   }),
 ];
 
+// Development-only plugins
 if (mode === 'development') {
-  // Only add LiveReloadPlugin in development mode
   const LiveReloadPlugin = require('webpack-livereload-plugin');
   plugins.push(new LiveReloadPlugin({ appendScriptTag: true }));
 }
+
+// List of libraries to expose globally
+const exposeLibraries = [
+  { name: 'jquery', exposes: ['$', 'jQuery'] },
+  { name: 'datatables.net', exposes: ['DataTable'] },
+  { name: 'moment', exposes: ['moment'] },
+  { name: 'leaflet', exposes: ['Leaflet'] },
+  { name: 'air-datepicker', exposes: ['AirDatepicker'] },
+  { name: 'air-datepicker/locale/en', exposes: ['localeEn'] },
+  { 
+    name: 'jquery-ui/ui/widgets/sortable', 
+    exposes: [{
+      globalName: 'jQuery.fn.sortable',
+      override: true
+    }]
+  },
+];
 
 module.exports = {
   entry: './base/static/js/index',
   output: {
     path: path.resolve('./base/static/bundles'),
     filename: "[name].[contenthash].js",
+    publicPath: '/static/bundles/',
   },
-  plugins: plugins,
+  plugins,
   module: {
     rules: [
-      // Expose jQuery globally
-      {
-        test: require.resolve('jquery'),
+      // Auto-generate expose-loader rules
+      ...exposeLibraries.map(lib => ({
+        test: require.resolve(lib.name),
         loader: 'expose-loader',
         options: {
-          exposes: ['$', 'jQuery'],
+          exposes: lib.exposes,
         },
-      },
-      // Expose DataTables globally
-      {
-        test: require.resolve('datatables.net'),
-        loader: 'expose-loader',
-        options: {
-          exposes: ['DataTable'],
-        },
-      },
-      // Expose Moment.js globally
-      {
-        test: require.resolve('moment'),
-        loader: 'expose-loader',
-        options: {
-          exposes: ['moment'],
-        },
-      },
-      // Expose Leaflet globally
-      {
-        test: require.resolve('leaflet'),
-        loader: 'expose-loader',
-        options: {
-          exposes: ['Leaflet'],
-        },
-      },
+      })),
       // CSS and SCSS rules
       {
         test: /\.css$/,
@@ -77,9 +70,7 @@ module.exports = {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-          },
+          'css-loader',
           {
             loader: 'sass-loader',
             options: {
@@ -88,18 +79,26 @@ module.exports = {
           },
         ],
       },
+      // For jQuery UI images
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[hash][ext]',
+        },
+      },
     ],
   },
   stats: {
-    assets: false,           // Hide assets info
-    chunks: false,           // Hide chunks info
-    modules: false,          // Hide modules info
-    entrypoints: false,      // Hide entrypoints info
-    performance: false,      // Hide performance info
-    errors: true,            // Show only errors
-    errorDetails: true,      // Include detailed error messages
-    warnings: true,          // Show warnings
-    builtAt: true,           // Show when the build was created
-    colors: true,            // Colorized output
+    assets: false,
+    chunks: false,
+    modules: false,
+    entrypoints: false,
+    performance: false,
+    errors: true,
+    errorDetails: true,
+    warnings: true,
+    builtAt: true,
+    colors: true,
   },
 };

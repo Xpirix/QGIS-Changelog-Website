@@ -7,7 +7,7 @@
     {% if user.is_authenticated %}
       {% if user.is_staff or user == the_project.owner or user in the_project.changelog_managers.all %}
         <li>
-          <a class="button is-success is-medium" href="{% url "version-create" the_project.slug %}">
+          <a class="button is-success is-medium" href="{% url "version-create" %}">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>
@@ -18,22 +18,24 @@
       {% endif %}
     {% endif %}
 
-    {% url 'category-list' the_project.slug as category_list_url %}
-    <li class="{% if request.path == category_list_url %}is-active{% endif %}">
-      <a href="{{ category_list_url }}">
-        <i class="fas fa-tags mr-3"></i>
-        Categories
-      </a>
-    </li>
-    {% url 'version-list' the_project.slug as version_list_url %}
+    {% url 'version-list' as version_list_url %}
     <li class="{% if request.path == version_list_url %}is-active{% endif %}">
       <a href="{{ version_list_url }}">
-        <i class="fas fa-code-branch mr-3"></i>
-        Versions
+      <i class="fas fa-home mr-3"></i>
+      QGIS Changelog Home
+      </a>
+    </li>
+    {% url 'category-list' as category_list_url %}
+    <li class="{% if request.path == category_list_url %}is-active{% endif %}">
+      <a href="{{ category_list_url }}">
+      <i class="fas fa-list mr-3"></i>
+      Categories
       </a>
     </li>
 
     {% if version %}
+    {% url 'version-detail' version.name as version_detail_url %}
+    {% if request.path == version_detail_url %}
       <li>
         <div class="has-child">
           <a onclick="toggleSubMenu('categories')">
@@ -56,6 +58,7 @@
             {% endfor %}
         </ul>
       </li>
+    {% endif %}
     {% endif %}
     </ul>
   </nav>

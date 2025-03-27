@@ -15,8 +15,8 @@ class LockVersion(LoginRequiredMixin, APIView):
 
     """
 
-    def get(self, request, project_slug, slug):
-        project = Project.objects.get(slug=project_slug)
+    def get(self, request, slug):
+        project = Project.objects.get(slug='qgis')
 
         # Check permissions
         if not self.request.user.is_staff \
@@ -37,8 +37,8 @@ class UnlockVersion(LoginRequiredMixin, APIView):
 
     """
 
-    def get(self, request, project_slug, slug):
-        project = Project.objects.get(slug=project_slug)
+    def get(self, request, slug):
+        project = Project.objects.get(slug='qgis')
 
         if not self.request.user.is_staff and \
                 self.request.user != project.owner \

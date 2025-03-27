@@ -126,8 +126,7 @@ class Version(models.Model):
 
     def get_absolute_url(self):
         return reverse('version-detail', kwargs={
-            'slug': self.slug,
-            'project_slug': self.project.slug
+            'slug': self.slug
         })
 
     def entries(self):
